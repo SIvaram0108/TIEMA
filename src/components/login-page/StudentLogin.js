@@ -8,7 +8,6 @@ export class StudentLogin extends Component {
         <div>
             <h1>student Login</h1>
             <LoginPage login={login}/>
-            {/* <LoginPage /> */}
         </div>
         
       )
