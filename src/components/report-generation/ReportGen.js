@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './ReportGen.css'
-import {Link} from 'react-router-dom'
 import TableView from './TableView';
 
 
@@ -8,6 +7,7 @@ export class ReportGen extends Component {
   constructor() {
     super();
     this.state = {
+      display : false,
       values: [0,0,0,0,0,0,0],
       companies : ["abc company","google","amazon","xyz company","tesla"],
       departments : ['CSE','IT','ECE','EEE','MECH','CIVIL','PROD','EIE','AIDS','CSBS'],
@@ -17,7 +17,7 @@ export class ReportGen extends Component {
           name : "xyz",
           id : "sec19cs054",
           year : 3,
-          semester : 6,
+          semester : 5,
           college : "sec",
           companyName: "Abc  company",
           domain: "software development",
@@ -48,7 +48,22 @@ export class ReportGen extends Component {
           workingDays: 5,
           workingHours: 8,
         },
+        { 
+          role: "student",
+          name : "gokul",
+          id : "sec19cs054",
+          year : 2,
+          semester : 4,
+          college : "sit",
+          companyName: "Amazon",
+          domain: "app development",
+          workingDays: 5,
+          workingHours: 8,
+        },
       ],
+      filteredData : [
+
+      ]
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -59,36 +74,45 @@ export class ReportGen extends Component {
 
   handleChange(e) {
     var tempValues = this.state.values;
-    tempValues[parseInt(e.target.name)]=e.target.value;
+    if(e.target.value==='default')
+      tempValues[parseInt(e.target.name)]=0;
+    else
+      tempValues[parseInt(e.target.name)]=e.target.value;
     this.setState({values: tempValues});
   }
 
   handleSubmit(event) {
+    const newData=this.state.data.filter(rep => (((this.state.values[0]!=0 && rep.year == this.state.values[0]) || this.state.values[0]==0) && ((this.state.values[1]!=0 && rep.semester == this.state.values[1]) || this.state.values[1]==0)))
     console.log(this.state.values);
     event.preventDefault();
+      this.setState({filteredData: newData, display:true});
+
 
   }
 
   renderTable() {
-    const report = this.state.data;
+    const filteredData = this.state.filteredData;
     const values=this.state.values;
-    return <TableView report={report} values={values}/>
+    // if(this.state.display === 1) 
+      return <TableView filteredData={filteredData} values={values} display={this.state.display}/>
   }
 
   render() {
+    const data=this.state.data;
+    const values=this.state.values;
     return (
-      <div>
-        <form>
-        <div className='grid grid-cols-4'>
+      <div className="page-body">
+        <form className='w-full'>
+        <div className='grid md:grid-cols-4 grid-cols-2'>
           <select className='drop-down'  placeholder='academic year' name='0' onChange={(e) => this.handleChange(e)}>
-            <option value="Academic Year" >Academic Year</option>
+            <option value="default" >Academic Year</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
           </select>
           <select className='drop-down' placeholder='semester' name='1' onChange={(e) => this.handleChange(e)}>
-            <option value='Semester'>Semester</option>
+            <option value='default'>Semester</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -99,34 +123,37 @@ export class ReportGen extends Component {
             <option value="8">8</option>
           </select>
           <select className='drop-down' placeholder='dept' name='2' onChange={(e) => this.handleChange(e)}>
-            <option value='Dept' >Dept</option>
+            <option value='default' >Dept</option>
             {this.state.departments.map((dept) => (<option value={dept} key={dept}>{dept}</option>))}
           </select>
           <select className='drop-down' placeholder='college' name='3' onChange={(e) => this.handleChange(e)}>
-            <option value='college' >college</option>
+            <option value='default' >college</option>
             <option value="Sri Sairam Engineering College">Sri Sairam Engineering College</option>
             <option value="Sri Sairam Institute of Technology">Sri Sairam Institute of Technology</option>
           </select>
           <select className='drop-down' placeholder='domain' name='4'>
-            <option value="domain">domain</option>
+            <option value="default">domain</option>
           </select>
           <select className='drop-down' placeholder='company name' name='5' onChange={(e) => this.handleChange(e)}>
-            <option value='company name'>company name</option>
+            <option value='default'>company name</option>
             {this.state.companies.map((company) => (<option value={company} key={company}>{company}</option>))}
           </select>
           <select className='drop-down'>
-            <option value="working hours">working hours</option>
+            <option value="default">working hours</option>
           </select>
           <select className='drop-down'>
-            <option value="working days">working days</option>
+            <option value="default">working days</option>
           </select>
           </div>
-          {/* <input type="submit" value="Submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"/> */}
-          <Link to="/" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.handleSubmit}>
+          {/* <input type="submit" value="Generate Report" className="sub-button font-bold py-2 px-4 rounded"/> */}
+          {/* <Link to="/" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={this.handleSubmit}>
             Generate Report
-          </Link>
+          </Link> */}
           </form>
-          <div>{this.renderTable}</div>
+          <div className='flex items-center justify-center'>
+            <button onClick={this.handleSubmit} className="sub-button font-bold py-2 px-2 rounded">Generate Report</button>
+          </div>
+          <div>{this.renderTable()}</div>
       </div>
     )
   }

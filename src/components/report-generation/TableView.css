@@ -1,0 +1,19 @@
+.download-btn {
+    background-color: #206E90;
+    color: #FFFFFF;
+    border-radius: 10px;
+}
+table{
+    width: 80%;
+    align-items: center;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+table, th ,td {
+    border: 1px solid;
+    background-color: white;
+}
+
+.table-heading {
+    background-color: aqua;
+}
